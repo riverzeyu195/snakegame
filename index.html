@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Snake Game</h1>
+            <div class="stats-container">
+                <div class="score-container">
+                    <span><i class="fas fa-star"></i> Score: </span>
+                    <span id="score">0</span>
+                </div>
+                <div class="high-score-container">
+                    <span><i class="fas fa-trophy"></i> High Score: </span>
+                    <span id="high-score">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-board">
+            <canvas id="game" width="400" height="400"></canvas>
+            <div id="countdown" class="countdown">3</div>
+        </div>
+        
+        <div class="controls-panel">
+            <div class="game-controls">
+                <button id="start-btn" class="control-btn"><i class="fas fa-play"></i> Start Game</button>
+                <button id="pause-btn" class="control-btn" disabled><i class="fas fa-pause"></i> Pause</button>
+            </div>
+            
+            <div class="settings">
+                <div class="control-group horizontal">
+                    <label for="difficulty">Difficulty:</label>
+                    <select id="difficulty-select" class="compact-select">
+                        <option value="easy" selected>Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <button id="sound-toggle" class="sound-btn">
+                        <i class="fas fa-volume-up"></i> Sound: ON
+                    </button>
+                </div>
+            </div>
+            
+            <div class="music-controls">
+                <div class="music-style">
+                    <label for="musicStyleSelect">🎵 Music Style:</label>
+                    <select id="musicStyleSelect">
+                    <option value="off">Off</option>
+                    <option value="peaceful">Peaceful</option>
+                    <option value="energetic" selected>Energetic</option>
+                    <option value="retro">Retro 8-bit</option>
+                </select>
+                </div>
+                <div class="music-volume">
+                    <label for="musicVolumeSlider">🔊 Music Volume:</label>
+                    <input type="range" id="musicVolumeSlider" min="0" max="1" step="0.1" value="0.3">
+                    <span id="volumeDisplay">30%</span>
+                </div>
+            </div>
+            
+            <div class="mobile-controls">
+                <button id="up-btn" class="direction-btn"><i class="fas fa-arrow-up"></i></button>
+                <div class="horizontal-controls">
+                    <button id="left-btn" class="direction-btn"><i class="fas fa-arrow-left"></i></button>
+                    <button id="right-btn" class="direction-btn"><i class="fas fa-arrow-right"></i></button>
+                </div>
+                <button id="down-btn" class="direction-btn"><i class="fas fa-arrow-down"></i></button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <h2>Game Over!</h2>
+            <div class="final-score">
+                <p>Your Score: <span id="final-score">0</span></p>
+                <p>High Score: <span id="modal-high-score">0</span></p>
+            </div>
+            <div id="new-high-score" class="new-high-score">
+                <i class="fas fa-crown"></i> New High Score! <i class="fas fa-crown"></i>
+            </div>
+            <button id="restart-btn">Play Again</button>
+        </div>
+    </div>
+    
+    <!-- Pause Modal -->
+    <div id="pause-modal" class="modal">
+        <div class="modal-content">
+            <h2>Game Paused</h2>
+            <button id="resume-btn">Resume Game</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
