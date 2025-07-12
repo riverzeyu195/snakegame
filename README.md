@@ -24,7 +24,7 @@ A modern, feature-rich implementation of the classic Snake game with dynamic mus
 
 ## 🚀 Live Demo
 
-[Play the game here](https://yourdomain.com) (Replace with your actual domain)
+[Play the game here](https://snakegame.riverzeyu.com)
 
 ## 🛠️ Technologies Used
 
@@ -47,22 +47,22 @@ A modern, feature-rich implementation of the classic Snake game with dynamic mus
 
 ## 🎯 Power-ups
 
-1. **Speed Boost** (Green): Increases snake speed for 5 seconds
-2. **Shield** (Blue): Protects from wall/self collisions for 5 seconds
-3. **Ghost Mode** (Gray): Allows passing through walls and self for 5 seconds
+1. **Speed Boost** (Green): Increases snake speed (reduces game interval) for 5 seconds
+2. **Shield** (Blue): Protects from self-collision for 5 seconds (walls still wrap around)
+3. **Ghost Mode** (Gray): Placeholder power-up for 5 seconds (no special effect currently)
 
 ## 🏆 Scoring System
 
-- **Regular Food**: +10 points
-- **Special Food**: +50 points (appears randomly for limited time)
-- **Power-up Collection**: +25 points
+- **Regular Food**: +1 point per food item
+- **Special Food/Power-ups**: +5 points (appears randomly for limited time)
+- **No collision penalties**: Game ends on self-collision (unless shield is active)
 
 ## 🔧 Installation & Setup
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/snake-game.git
-   cd snake-game
+   git clone https://github.com/riverzeyu195/snakegame.git
+   cd snakegame
    ```
 
 2. Open `index.html` in a web browser or serve with a local server:
@@ -82,7 +82,7 @@ A modern, feature-rich implementation of the classic Snake game with dynamic mus
 1. Push your code to GitHub
 2. Go to repository Settings → Pages
 3. Select source branch (usually `main` or `master`)
-4. Your game will be available at `https://yourusername.github.io/repository-name`
+4. Your game will be available at `https://riverzeyu195.github.io/snakegame`
 
 ### Custom Domain
 1. Add a `CNAME` file with your domain name
@@ -127,7 +127,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📞 Support
 
-If you encounter any issues or have questions, please [open an issue](https://github.com/yourusername/snake-game/issues) on GitHub.
+If you encounter any issues or have questions, please [open an issue](https://github.com/riverzeyu195/snakegame/issues) on GitHub.
 
 ---
 
