@@ -5,7 +5,7 @@ A modern, feature-rich implementation of the classic Snake game with dynamic mus
 ## 🎮 Features
 
 - **Multiple Difficulty Levels**: Easy, Medium, and Hard modes
-- **Dynamic Background Music**: Three distinct music styles (Peaceful, Energetic, Retro 8-bit)
+- **Dynamic Background Music**: Four distinct music styles (Synthwave, Minimal Techno, Energetic, Retro 8-bit)
 - **Power-ups**: Speed boost, Shield protection, and Ghost mode
 - **Special Food**: Bonus points with time-limited spawning
 - **Particle Effects**: Visual feedback for enhanced gaming experience
@@ -16,8 +16,9 @@ A modern, feature-rich implementation of the classic Snake game with dynamic mus
 
 ## 🎵 Music System
 
-- **Peaceful**: Meditative chord progressions with ambient pads
-- **Energetic**: High-intensity electronic music with layered harmonies
+- **Synthwave**: 80s-inspired electronic music with driving arpeggios and nostalgic melodies
+- **Minimal Techno**: Hypnotic, repetitive patterns with four-on-the-floor beats for focused gameplay
+- **Energetic**: High-intensity electronic music with layered harmonies and dynamic sequences
 - **Retro 8-bit**: Authentic chiptune with multiple themes (Arcade, Platformer, Space Shooter, Power-up)
 - **Volume Control**: Adjustable music volume with persistent settings
 

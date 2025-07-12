@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Enhanced game features
     let scoreAnimation = { active: false, value: 0, opacity: 1 };
     let soundEnabled = true;
-    let musicStyle = localStorage.getItem('snakeGameMusicStyle') || 'energetic'; // off, peaceful, energetic, retro
+    let musicStyle = localStorage.getItem('snakeGameMusicStyle') || 'synthwave'; // off, synthwave, energetic, retro, minimal
     let musicVolume = parseFloat(localStorage.getItem('snakeGameMusicVolume')) || 0.3;
     let gameStats = {
         gamesPlayed: parseInt(localStorage.getItem('snakeGamesPlayed')) || 0,
@@ -92,14 +92,17 @@ document.addEventListener('DOMContentLoaded', function() {
             backgroundMusic = { playing: true };
             
             switch(musicStyle) {
-                case 'peaceful':
-                    playPeacefulMusic();
+                case 'synthwave':
+                    playSynthwaveMusic();
                     break;
                 case 'energetic':
                     playEnergeticMusic();
                     break;
                 case 'retro':
                     playRetroMusic();
+                    break;
+                case 'minimal':
+                    playMinimalTechnoMusic();
                     break;
                 default:
                     return;
@@ -109,111 +112,254 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Peaceful music style - deeply relaxing and meditative with rich progressions
-    function playPeacefulMusic() {
-        const peacefulProgressions = [
-            // Progression 1: Classic peaceful sequence
+    // Synthwave music style - 80s-inspired electronic music with driving beats
+    function playSynthwaveMusic() {
+        const synthwaveSequences = [
+            // Sequence 1: Classic 80s arpeggio
             {
-                chords: [
-                    [174.61, 220.00, 261.63, 329.63], // F-A-C-E (Fmaj7)
-                    [196.00, 246.94, 293.66, 369.99], // G-B-D-F# (Gmaj7)
-                    [164.81, 207.65, 246.94, 311.13], // E-G#-B-D# (Emaj7)
-                    [146.83, 185.00, 220.00, 277.18]  // D-F#-A-C# (Dmaj7)
-                ],
-                durations: [8, 6, 7, 9],
-                pauses: [2, 1.5, 2.5, 3]
+                arpeggio: [261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 261.63, 196.00],
+                bass: [130.81, 130.81, 164.81, 164.81, 196.00, 196.00, 174.61, 174.61],
+                rhythm: [0.25, 0.25, 0.25, 0.5, 0.25, 0.25, 0.25, 0.5],
+                intensity: 1.0
             },
-            // Progression 2: Ambient floating sequence
+            // Sequence 2: Nostalgic lead melody
             {
-                chords: [
-                    [130.81, 164.81, 196.00, 246.94], // C-E-G-B (Cmaj7)
-                    [146.83, 185.00, 220.00, 261.63], // D-F#-A-C (D7)
-                    [123.47, 155.56, 185.00, 233.08], // B-D#-F#-A# (Bmaj7)
-                    [110.00, 138.59, 164.81, 207.65]  // A-C#-E-G# (Amaj7)
-                ],
-                durations: [7, 8, 6, 10],
-                pauses: [1.8, 2.2, 1.5, 2.8]
+                arpeggio: [440.00, 523.25, 659.25, 880.00, 659.25, 523.25, 440.00, 349.23],
+                bass: [220.00, 261.63, 329.63, 440.00, 329.63, 261.63, 220.00, 174.61],
+                rhythm: [0.3, 0.2, 0.3, 0.4, 0.3, 0.2, 0.3, 0.6],
+                intensity: 1.2
+            },
+            // Sequence 3: Driving synthwave progression
+            {
+                arpeggio: [523.25, 659.25, 783.99, 1046.50, 783.99, 659.25, 523.25, 415.30],
+                bass: [261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 261.63, 207.65],
+                rhythm: [0.2, 0.2, 0.3, 0.4, 0.3, 0.2, 0.2, 0.5],
+                intensity: 1.1
             }
         ];
         
-        let progressionIndex = 0;
-        let chordIndex = 0;
+        let sequenceIndex = 0;
+        let noteIndex = 0;
         let isPlaying = false;
+        let beatCount = 0;
         
-        function playPeacefulChord() {
-            if (!soundEnabled || !backgroundMusic || isPlaying || musicStyle !== 'peaceful') return;
+        function playSynthwaveNote() {
+            if (!soundEnabled || !backgroundMusic || isPlaying || musicStyle !== 'synthwave') return;
             
             isPlaying = true;
-            const currentProgression = peacefulProgressions[progressionIndex];
-            const currentChord = currentProgression.chords[chordIndex];
-            const duration = currentProgression.durations[chordIndex];
-            const pause = currentProgression.pauses[chordIndex];
+            const currentSequence = synthwaveSequences[sequenceIndex];
+            const arpeggioFreq = currentSequence.arpeggio[noteIndex];
+            const bassFreq = currentSequence.bass[noteIndex];
+            const duration = currentSequence.rhythm[noteIndex];
+            const intensity = currentSequence.intensity;
             
-            const oscillators = [];
-            const gainNodes = [];
+            // Create synthwave layers
+            const arpeggioOsc = audioContext.createOscillator();
+            const bassOsc = audioContext.createOscillator();
+            const padOsc = audioContext.createOscillator();
+            const arpeggioGain = audioContext.createGain();
+            const bassGain = audioContext.createGain();
+            const padGain = audioContext.createGain();
             
-            // Create rich, layered chord with subtle variations
-            currentChord.forEach((frequency, index) => {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(musicGainNode);
-                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-                
-                // Vary oscillator types for richer texture
-                oscillator.type = index % 2 === 0 ? 'sine' : 'triangle';
-                
-                // Dynamic volume envelope with subtle variations
-                const baseVolume = (0.012 - (index * 0.002)) * (0.8 + Math.random() * 0.4);
-                const attackTime = 2 + Math.random() * 2;
-                const sustainTime = duration * 0.6;
-                const releaseTime = duration * 0.4;
-                
-                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                gainNode.gain.linearRampToValueAtTime(baseVolume, audioContext.currentTime + attackTime);
-                gainNode.gain.linearRampToValueAtTime(baseVolume * 0.8, audioContext.currentTime + attackTime + sustainTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + duration + 0.5);
-                
-                oscillators.push(oscillator);
-                gainNodes.push(gainNode);
-            });
+            // Arpeggio lead - classic synthwave sound
+            arpeggioOsc.connect(arpeggioGain);
+            arpeggioGain.connect(musicGainNode);
+            arpeggioOsc.frequency.setValueAtTime(arpeggioFreq, audioContext.currentTime);
+            arpeggioOsc.type = 'sawtooth'; // Classic analog synth sound
             
-            // Add subtle ambient pad layer
-            if (Math.random() > 0.6) {
-                const padOsc = audioContext.createOscillator();
-                const padGain = audioContext.createGain();
-                
+            // Bass line - driving foundation
+            bassOsc.connect(bassGain);
+            bassGain.connect(musicGainNode);
+            bassOsc.frequency.setValueAtTime(bassFreq, audioContext.currentTime);
+            bassOsc.type = 'square';
+            
+            // Pad layer - atmospheric background
+            if (beatCount % 4 === 0) {
                 padOsc.connect(padGain);
                 padGain.connect(musicGainNode);
-                padOsc.frequency.setValueAtTime(currentChord[0] * 0.5, audioContext.currentTime);
+                padOsc.frequency.setValueAtTime(arpeggioFreq * 0.5, audioContext.currentTime);
                 padOsc.type = 'sine';
-                
-                padGain.gain.setValueAtTime(0, audioContext.currentTime);
-                padGain.gain.linearRampToValueAtTime(0.005, audioContext.currentTime + 4);
-                padGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
-                
-                padOsc.start(audioContext.currentTime);
-                padOsc.stop(audioContext.currentTime + duration);
             }
             
-            chordIndex = (chordIndex + 1) % currentProgression.chords.length;
-            if (chordIndex === 0) {
-                progressionIndex = (progressionIndex + 1) % peacefulProgressions.length;
+            // 80s-style volume envelopes
+            const arpeggioVol = (0.02 + (intensity - 1) * 0.008) * (0.9 + Math.random() * 0.2);
+            const bassVol = arpeggioVol * 0.7;
+            const padVol = arpeggioVol * 0.3;
+            
+            // Sharp attack for that punchy 80s sound
+            const attackTime = 0.01;
+            const decayTime = duration * 0.8;
+            
+            arpeggioGain.gain.setValueAtTime(0, audioContext.currentTime);
+            arpeggioGain.gain.linearRampToValueAtTime(arpeggioVol, audioContext.currentTime + attackTime);
+            arpeggioGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + decayTime);
+            
+            bassGain.gain.setValueAtTime(0, audioContext.currentTime);
+            bassGain.gain.linearRampToValueAtTime(bassVol, audioContext.currentTime + attackTime);
+            bassGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + decayTime);
+            
+            if (beatCount % 4 === 0) {
+                padGain.gain.setValueAtTime(0, audioContext.currentTime);
+                padGain.gain.linearRampToValueAtTime(padVol, audioContext.currentTime + 0.5);
+                padGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration * 2);
+            }
+            
+            // Start oscillators
+            arpeggioOsc.start(audioContext.currentTime);
+            arpeggioOsc.stop(audioContext.currentTime + duration + 0.1);
+            bassOsc.start(audioContext.currentTime);
+            bassOsc.stop(audioContext.currentTime + duration + 0.1);
+            
+            if (beatCount % 4 === 0) {
+                padOsc.start(audioContext.currentTime);
+                padOsc.stop(audioContext.currentTime + duration * 2);
+            }
+            
+            noteIndex = (noteIndex + 1) % currentSequence.arpeggio.length;
+            beatCount++;
+            
+            if (noteIndex === 0) {
+                sequenceIndex = (sequenceIndex + 1) % synthwaveSequences.length;
+                // Brief pause between sequences
+                if (backgroundMusic) {
+                    setTimeout(() => {
+                        isPlaying = false;
+                        setTimeout(playSynthwaveNote, 300);
+                    }, duration * 1000);
+                    return;
+                }
             }
             
             if (backgroundMusic) {
                 setTimeout(() => {
                     isPlaying = false;
-                    setTimeout(playPeacefulChord, pause * 1000);
+                    setTimeout(playSynthwaveNote, 50 + Math.random() * 30);
                 }, duration * 1000);
             }
         }
         
-        playPeacefulChord();
+        playSynthwaveNote();
+    }
+    
+    // Minimal Techno music style - hypnotic, repetitive patterns for focus
+    function playMinimalTechnoMusic() {
+        const minimalPatterns = [
+            // Pattern 1: Basic four-on-the-floor
+            {
+                kick: [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+                hihat: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
+                bass: [130.81, 0, 0, 146.83, 0, 0, 123.47, 0, 0, 138.59, 0, 0, 130.81, 0, 0, 0],
+                lead: [0, 523.25, 0, 0, 659.25, 0, 0, 783.99, 0, 0, 659.25, 0, 0, 523.25, 0, 0],
+                stepDuration: 0.15
+            },
+            // Pattern 2: Syncopated minimal
+            {
+                kick: [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0],
+                hihat: [0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1],
+                bass: [164.81, 0, 0, 0, 146.83, 0, 0, 174.61, 0, 0, 0, 155.56, 0, 0, 164.81, 0],
+                lead: [0, 0, 659.25, 0, 0, 880.00, 0, 0, 783.99, 0, 0, 659.25, 0, 0, 523.25, 0],
+                stepDuration: 0.12
+            }
+        ];
+        
+        let patternIndex = 0;
+        let stepIndex = 0;
+        let isPlaying = false;
+        
+        function playMinimalStep() {
+            if (!soundEnabled || !backgroundMusic || isPlaying || musicStyle !== 'minimal') return;
+            
+            isPlaying = true;
+            const currentPattern = minimalPatterns[patternIndex];
+            const stepDuration = currentPattern.stepDuration;
+            
+            // Play kick drum
+            if (currentPattern.kick[stepIndex]) {
+                const kickOsc = audioContext.createOscillator();
+                const kickGain = audioContext.createGain();
+                
+                kickOsc.connect(kickGain);
+                kickGain.connect(musicGainNode);
+                kickOsc.frequency.setValueAtTime(60, audioContext.currentTime);
+                kickOsc.type = 'sine';
+                
+                kickGain.gain.setValueAtTime(0, audioContext.currentTime);
+                kickGain.gain.linearRampToValueAtTime(0.03, audioContext.currentTime + 0.01);
+                kickGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+                
+                kickOsc.start(audioContext.currentTime);
+                kickOsc.stop(audioContext.currentTime + 0.12);
+            }
+            
+            // Play hi-hat
+            if (currentPattern.hihat[stepIndex]) {
+                const hihatOsc = audioContext.createOscillator();
+                const hihatGain = audioContext.createGain();
+                
+                hihatOsc.connect(hihatGain);
+                hihatGain.connect(musicGainNode);
+                hihatOsc.frequency.setValueAtTime(8000 + Math.random() * 2000, audioContext.currentTime);
+                hihatOsc.type = 'square';
+                
+                hihatGain.gain.setValueAtTime(0, audioContext.currentTime);
+                hihatGain.gain.linearRampToValueAtTime(0.008, audioContext.currentTime + 0.005);
+                hihatGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
+                
+                hihatOsc.start(audioContext.currentTime);
+                hihatOsc.stop(audioContext.currentTime + 0.06);
+            }
+            
+            // Play bass
+            if (currentPattern.bass[stepIndex]) {
+                const bassOsc = audioContext.createOscillator();
+                const bassGain = audioContext.createGain();
+                
+                bassOsc.connect(bassGain);
+                bassGain.connect(musicGainNode);
+                bassOsc.frequency.setValueAtTime(currentPattern.bass[stepIndex], audioContext.currentTime);
+                bassOsc.type = 'sawtooth';
+                
+                bassGain.gain.setValueAtTime(0, audioContext.currentTime);
+                bassGain.gain.linearRampToValueAtTime(0.015, audioContext.currentTime + 0.02);
+                bassGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + stepDuration * 2);
+                
+                bassOsc.start(audioContext.currentTime);
+                bassOsc.stop(audioContext.currentTime + stepDuration * 2.5);
+            }
+            
+            // Play lead
+            if (currentPattern.lead[stepIndex]) {
+                const leadOsc = audioContext.createOscillator();
+                const leadGain = audioContext.createGain();
+                
+                leadOsc.connect(leadGain);
+                leadGain.connect(musicGainNode);
+                leadOsc.frequency.setValueAtTime(currentPattern.lead[stepIndex], audioContext.currentTime);
+                leadOsc.type = 'triangle';
+                
+                leadGain.gain.setValueAtTime(0, audioContext.currentTime);
+                leadGain.gain.linearRampToValueAtTime(0.012, audioContext.currentTime + 0.01);
+                leadGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + stepDuration * 3);
+                
+                leadOsc.start(audioContext.currentTime);
+                leadOsc.stop(audioContext.currentTime + stepDuration * 3.5);
+            }
+            
+            stepIndex = (stepIndex + 1) % currentPattern.kick.length;
+            
+            if (stepIndex === 0) {
+                patternIndex = (patternIndex + 1) % minimalPatterns.length;
+            }
+            
+            if (backgroundMusic) {
+                setTimeout(() => {
+                    isPlaying = false;
+                    setTimeout(playMinimalStep, 10);
+                }, stepDuration * 1000);
+            }
+        }
+        
+        playMinimalStep();
     }
     
     // Energetic music style - dynamic, high-energy with varied musical elements
